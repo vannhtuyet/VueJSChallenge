@@ -39,8 +39,10 @@
         }
       },
       updateLoan() {
+        this.currentLoan.accountId = this.currentUser.accountId;
+        this.currentLoan.id = Date.now();
         this.currentLoan.status = "Pending";
-        this.$store.dispatch("setLoanInfo", this.currentLoan);
+        this.$store.dispatch("addLoan", this.currentLoan);
       }
     },
   }

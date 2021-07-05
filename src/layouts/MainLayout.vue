@@ -76,9 +76,10 @@
     },
     created() {
       this.currentAccount = this.$store.state.currentAccount;
-    },
-    methods: {
-      
+      debugger
+      if (this.currentAccount == null) {
+        this.$router.push({path: "/Login"})
+      }
     }
   }
 </script>

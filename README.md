@@ -12,9 +12,19 @@ quasar dev
 quasar build
 ```
 
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+### Use the app
+User Account: henry
 
-## License
+Settings Tab: Login to app
+Credit Tab: Add loans
+Payment Tab: To repay weekly
+Cards Tab: Information cards - Css Challenge
+Home Tab: Welcome user
 
-[MIT](http://opensource.org/licenses/MIT)
+Admin Account: admin
+Home Tab: Welcome user
+Request Tab: Show all pending request and approve or reject it
+
+All data save to local storage
+Everytime reload the page should login.
+

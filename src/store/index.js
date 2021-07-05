@@ -18,7 +18,7 @@ function initialStateFromLocalStorage() {
   const initData = {
     accounts: [],
     loans: [],
-    currentAccount: {},
+    currentAccount: null,
     count: 0
   }
   initData.loans = loans.getLoans();
@@ -33,7 +33,7 @@ export default function (/* { ssrContext } */) {
         return state.currentAccount();
       },
       getLoanByUserId: (state) => (accountId) => {
-        var loan = state.loans.find(loan => loan.accountId == accountId);
+        var loan = state.loans.find(loan => loan.accountId == accountId && loan.status == "None");
         if (loan == null) {
           loan = { amountTotal: 0, status: "None", period: 0 };
         }
@@ -45,7 +45,10 @@ export default function (/* { ssrContext } */) {
         loans.forEach((loan) => {
           result += loan.amountTotal / loan.period;
         });
-        return result;
+        return Math.round(result);
+      },
+      getAccountById: (state) => (accountId) => {
+        return state.accounts.find(account => account.accountId == accountId);
       }
     },
     mutations: {
@@ -54,7 +57,11 @@ export default function (/* { ssrContext } */) {
       },
       setLoanInfo(state, payload) {
         var loan = state.loans.find(loan => loan.loanId == payload.loanId);
-        loan = payload;
+        if (loan == null) {
+          state.loans.push(payload);
+        }
+        else
+          loan = payload;
       },
       setLoanStatus(state, payload) {
         var loan = state.loans.find(l => l.loanId == payload.loanId);
@@ -66,31 +73,37 @@ export default function (/* { ssrContext } */) {
       updateLoanToBalance(state, loan) {
         if (loan.status == "Approve") {
           var account = state.accounts.find(account => account.accountId == loan.accountId);
-          account.balance += loan.amountTotal;
+          account.balance = parseInt(account.balance) + parseInt(loan.amountTotal);
         }
-      },
-      increment(state) {
-        // mutate state
-        state.count++
       }
     },
     actions: {
       login(context, payload) {
         var account = context.state.accounts.find(account => account.accountName == payload.loginName);
+        console.log("account", account);
         if (account != null) {
           context.commit("login", account)
         }
       },
       setLoanStatus(context, payload) {
+        console.log("setLoanStatus", payload)
         context.commit('setLoanStatus', payload);
         context.commit("updateLoanToBalance", payload);
+        var account = context.getters.getAccountById(payload.accountId);
+        accounts.updateAccount(account);
+        loans.updateLoan(payload);
       },
-      setLoanInfo(context, payload) {
-        var currentAccount = context.state.currentAccount;
-        currentAccount.balance = currentAccount.balance - payload.repaidAmount;
-        context.commit("setCurrentAccount", currentAccount);
+      addLoan(context, payload) {
+        loans.updateLoan(payload);
         context.commit('setLoanInfo', payload)
       },
+      setLoanRepaidAmount(context, payload) {
+        var currentAccount = context.state.currentAccount;
+        currentAccount.balance = currentAccount.balance - payload;
+        accounts.updateAccount(currentAccount);
+        context.commit("setCurrentAccount", currentAccount);
+        context.commit('setLoanInfo', payload)
+      }
     },
     // enable strict mode (adds overhead!)
     // for dev mode only

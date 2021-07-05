@@ -30,13 +30,18 @@ export default {
     return loan;
   },
   updateLoan(loan) {
+    var loans = [];
     var loansText = localStorage.getItem("loans");
-    var loans = JSON.parse(loansText);
-    var loanSelected = loans.filter(l => l.id == loan.id);
-    if (loanSelected != null)
-      loanSelected = loan
+    if (loansText != null) {
+      loans = JSON.parse(loansText);
+    }
+    var index = loans.findIndex(l => l.id == loan.id);
+    if (index >= 0) {
+      loans[index] = loan;
+    }
     else
       loans.push(loan)
+    console.log("loans", loans);
     localStorage.setItem("loans", JSON.stringify(loans))
   },
   updateLoanStatus(loanId, status) {
