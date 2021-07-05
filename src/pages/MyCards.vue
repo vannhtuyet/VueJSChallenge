@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-sm-3">
             Available balance
-            <div class="text-subtitle2">$$3,000</div>
+            <div class="text-subtitle2">$${{currentAccount.balance}}</div>
           </div>
           <div class="col-sm-9">
             <q-btn label="New card" icon="fas fa-plus-circle" class="bg-indigo text-white float-right" no-caps></q-btn>
@@ -42,7 +42,7 @@
                         <div class="text-right text-weight-medium text-h6">
                           aspire
                         </div>
-                        <div class="text-weight-medium text-h5">Mark Henry</div>
+                        <div class="text-weight-medium text-h5">{{currentAccount.displayName}}</div>
                         <q-input readonly borderless v-model="password" :type="isPwd ? 'password' : 'text'">
                         </q-input>
                         <div class="row">
@@ -224,7 +224,16 @@
         tab: 'mycards',
         cardnumber: '2012 2016 5204 7152',
         isPwd: true,
-        password: "0210201820792020"
+        password: "0210201820792020",
+        currentAccount: {}
+      }
+    },
+    created() {
+      this.getCurrentAccount();
+    },
+    methods: {
+      getCurrentAccount() {
+        this.currentAccount = this.$store.state.currentAccount;
       }
     }
   }

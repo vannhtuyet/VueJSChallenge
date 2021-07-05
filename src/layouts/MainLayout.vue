@@ -15,7 +15,7 @@
             <q-item-label>Home</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="/MyCards" active-class="q-item-no-link-highlighting text-secondary">
+        <q-item v-if="currentAccount.role === 'user'" to="/MyCards" active-class="q-item-no-link-highlighting text-secondary">
           <q-item-section avatar>
             <q-icon name="fas fa-credit-card" />
           </q-item-section>
@@ -23,7 +23,15 @@
             <q-item-label>Cards</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="/Payment" active-class="q-item-no-link-highlighting text-secondary">
+        <q-item v-if="currentAccount.role === 'admin'" to="/AdminView" active-class="q-item-no-link-highlighting text-secondary">
+          <q-item-section avatar>
+            <q-icon name="fas fa-credit-card" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Request</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item v-if="currentAccount.role === 'user'" to="/Payment" active-class="q-item-no-link-highlighting text-secondary">
           <q-item-section avatar>
             <q-icon name="fas fa-exchange-alt" />
           </q-item-section>
@@ -31,7 +39,7 @@
             <q-item-label>Payment</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="/Credit" active-class="q-item-no-link-highlighting text-secondary">
+        <q-item v-if="currentAccount.role === 'user'" to="/Credit" active-class="q-item-no-link-highlighting text-secondary">
           <q-item-section avatar>
             <q-icon name="fas fa-arrow-circle-up" />
           </q-item-section>
@@ -39,9 +47,9 @@
             <q-item-label>Credit</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="/Login-1" active-class="q-item-no-link-highlighting text-secondary">
+        <q-item to="/Login" active-class="q-item-no-link-highlighting text-secondary">
           <q-item-section avatar>
-            <q-icon name="fas fa-cog" />
+            <q-icon name="fas fa-user" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Settings</q-item-label>
@@ -63,7 +71,14 @@
     data() {
       return {
         leftDrawerOpen: false,
+        currentAccount: {}
       }
+    },
+    created() {
+      this.currentAccount = this.$store.state.currentAccount;
+    },
+    methods: {
+      
     }
   }
 </script>

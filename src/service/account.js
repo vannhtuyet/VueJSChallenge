@@ -1,19 +1,31 @@
-import base from './base';
-const resource = "/account";
 
 export default {
-  getAccount() {
-    return {
-      id: "1",
-      name: "Mark Henry",
+  getAccounts() {
+    var accounts = [{
+      accountId: "1",
+      accountName: "henry",
+      displayName: "Mark Henry",
       balance: 3000,
-      loanAmount: 0,
-      repaymentPeriod: 12,
-      repaidAmount: 0,
-      status: "None"
-    };
-  },
-  update(accountId, payload) {
-    return base.put(`${resource}/${accountId}`, payload);
+      role: "user"
+    },
+    {
+      accountId: "2",
+      accountName: "admin",
+      displayName: "Admin",
+      balance: 10000000,
+      role: "admin"
+    },
+    {
+      accountId: "3",
+      accountName: "johan",
+      displayName: "Johan",
+      balance: 0,
+      role: "user"
+    }];
+    var accountsText = localStorage.getItem("accounts");
+    if (accountsText != null) {
+      accounts = JSON.parse(accountsText);
+    }
+    return accounts;
   }
 }

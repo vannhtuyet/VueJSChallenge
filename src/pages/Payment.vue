@@ -1,25 +1,36 @@
 <template>
   <q-page class="bg-white">
-    <q-input class="q-pa-md" v-model="userAccount.repaidAmount" label="Weekly amount" filled></q-input>
-    <q-btn label="Repay" class="bg-indigo text-white float-right q-ma-md" @click="updateRepaidAmount"></q-btn>
+    <q-input class="q-pa-md" readonly v-model="weeklyAmount" label="Weekly amount" filled></q-input>
+    <q-btn label="Repay" class="bg-indigo text-white float-right q-ma-md"  @click="updateRepaidAmount"></q-btn>
   </q-page>
 </template>
 
 <script>
-  import account from "../service/account";
   export default {
     name: 'Payment',
     data() {
       return {
-        userAccount: {}
+        currentLoan: {},
+        weeklyAmount: 0,
+        isNotAcceptable: false
       }
     },
     created() {
-      this.updateRepaidAmount();
+      this.getCurrentLoan();
     },
     methods: {
-      async updateRepaidAmount() {
-        await account.update("1", this.userAccount);
+      getCurrentLoan() {
+        var currentUser = this.$store.state.currentAccount;
+        this.currentLoan = this.$store.getters.getLoanByUserId(currentUser.accountId);
+        this.weeklyAmount = this.$store.getters.getCurrentUserWeeklyAmount;
+      },
+      updateRepaidAmount() {
+        if (this.currentLoan.repaidAmount > this.$store.state.currentAccount.balance) {
+          alert("You don't have enough money. Please make a deposit. Thank you")
+        }
+        else {
+          this.$store.dispatch("setLoanInfo", this.currentLoan);
+        }
       }
     }
   }

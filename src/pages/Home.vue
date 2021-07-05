@@ -1,12 +1,20 @@
 <template>
   <q-page>
-    <q-img src="https://cdn.quasar.dev/img/parallax1.jpg" />
+    Welcome back {{username}}
   </q-page>
 
 </template>
 
 <script>
   export default {
+    data() {
+      return {
+        username: 'Admin'
+      }
+    },
+    created() {
+      this.username = this.$store.state.currentAccount.displayName;
+    }
   }
 </script>
 
